@@ -4,7 +4,6 @@ import com.vrbeneficios.miniautorizador.dto.CardDTO;
 import com.vrbeneficios.miniautorizador.exception.CardAlreadyExistsException;
 import com.vrbeneficios.miniautorizador.model.Card;
 import com.vrbeneficios.miniautorizador.repository.CardRepository;
-import com.vrbeneficios.miniautorizador.service.CardService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
