@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import java.math.BigDecimal;
 
 @Entity
-public class Cartao {
+public class Card {
     @Id
     private String numeroCartao;
     private String senha;
