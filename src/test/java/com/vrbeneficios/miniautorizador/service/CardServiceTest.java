@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +33,10 @@ class CardServiceTest {
     @Test
     void createCard_shouldCreateCardSuccessfully() {
         CardDTO cardDTO = new CardDTO("6549873025634501", "1234");
+        Card mockCard = new Card(cardDTO.getCardNumber(), cardDTO.getPassword(), BigDecimal.valueOf(500.00));
+
         when(cardRepository.findById(cardDTO.getCardNumber())).thenReturn(Optional.empty());
+        when(cardRepository.save(any(Card.class))).thenReturn(mockCard);
 
         Card createdCard = cardService.createCard(cardDTO);
 
