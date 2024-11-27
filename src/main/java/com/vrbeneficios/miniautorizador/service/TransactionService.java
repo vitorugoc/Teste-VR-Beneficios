@@ -13,19 +13,19 @@ public class TransactionService {
 
     private final CardRepository cardRepository;
 
-    public void processTransaction(TransactionDTO transaction) {
-        Card card = cardRepository.findByCardNumber(transaction.getCardNumber())
+    public void processTransaction(TransactionDTO transactionDTO) {
+        Card card = cardRepository.findByCardNumber(transactionDTO.getCardNumber())
                 .orElseThrow(() -> new TransactionException("CARTAO_INEXISTENTE"));
 
-        if (!card.getPassword().equals(transaction.getCardPassword())) {
+        if (!card.getPassword().equals(transactionDTO.getCardPassword())) {
             throw new TransactionException("SENHA_INVALIDA");
         }
 
-        if (card.getBalance().compareTo(transaction.getValue()) < 0) {
+        if (card.getBalance().compareTo(transactionDTO.getValue()) < 0) {
             throw new TransactionException("SALDO_INSUFICIENTE");
         }
 
-        card.setBalance(card.getBalance().subtract(transaction.getValue()));
+        card.setBalance(card.getBalance().subtract(transactionDTO.getValue()));
         cardRepository.save(card);
     }
 }

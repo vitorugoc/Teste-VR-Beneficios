@@ -37,12 +37,12 @@ class TransactionServiceTest {
         Card card = new Card(cardNumber, password, BigDecimal.valueOf(500.00));
         TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
 
-        when(cardRepository.findById(cardNumber)).thenReturn(Optional.of(card));
+        when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.of(card));
 
         transactionService.processTransaction(transaction);
 
         verify(cardRepository, times(1)).save(card);
-        verify(cardRepository, times(1)).findById(cardNumber);
+        verify(cardRepository, times(1)).findByCardNumber(cardNumber);
     }
 
     @Test
@@ -52,7 +52,7 @@ class TransactionServiceTest {
         BigDecimal transactionAmount = BigDecimal.valueOf(10.00);
         TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
 
-        when(cardRepository.findById(cardNumber)).thenReturn(Optional.empty());
+        when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.empty());
 
         assertThrows(TransactionException.class, () ->
                 transactionService.processTransaction(transaction)
@@ -67,7 +67,7 @@ class TransactionServiceTest {
         Card card = new Card(cardNumber, "1234", BigDecimal.valueOf(500.00));
         TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
 
-        when(cardRepository.findById(cardNumber)).thenReturn(Optional.of(card));
+        when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.of(card));
 
         assertThrows(TransactionException.class, () ->
                 transactionService.processTransaction(transaction)
@@ -82,7 +82,7 @@ class TransactionServiceTest {
         Card card = new Card(cardNumber, password, BigDecimal.valueOf(500.00));
         TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
 
-        when(cardRepository.findById(cardNumber)).thenReturn(Optional.of(card));
+        when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.of(card));
 
         assertThrows(TransactionException.class, () ->
                 transactionService.processTransaction(transaction)
