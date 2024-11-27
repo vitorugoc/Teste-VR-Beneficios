@@ -25,15 +25,27 @@ class CardServiceTest {
     @InjectMocks
     private CardService cardService;
 
+    private final String cardNumber = "6549873025634501";
+    private final String cardPassword = "1234";
+    private final BigDecimal initialBalance = BigDecimal.valueOf(500.00);
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    private CardDTO createCardDTO() {
+        return new CardDTO("6549873025634501", "1234");
+    }
+
+    private Card createCard(String cardNumber, String password, BigDecimal balance) {
+        return new Card(cardNumber, password, balance);
+    }
+
     @Test
     void createCard_shouldCreateCardSuccessfully() {
-        CardDTO cardDTO = new CardDTO("6549873025634501", "1234");
-        Card mockCard = new Card(cardDTO.getCardNumber(), cardDTO.getPassword(), BigDecimal.valueOf(500.00));
+        CardDTO cardDTO = createCardDTO();
+        Card mockCard = createCard(cardNumber, cardPassword, initialBalance);
 
         when(cardRepository.findById(cardDTO.getCardNumber())).thenReturn(Optional.empty());
         when(cardRepository.save(any(Card.class))).thenReturn(mockCard);
@@ -47,29 +59,26 @@ class CardServiceTest {
 
     @Test
     void createCard_shouldThrowExceptionWhenCardAlreadyExists() {
-        CardDTO cardDTO = new CardDTO("6549873025634501", "1234");
+        CardDTO cardDTO = createCardDTO();
         when(cardRepository.findById(cardDTO.getCardNumber()))
-                .thenReturn(Optional.of(new Card(cardDTO.getCardNumber(), cardDTO.getPassword())));
+                .thenReturn(Optional.of(createCard(cardDTO.getCardNumber(), cardDTO.getPassword(), initialBalance)));
 
         assertThrows(CardAlreadyExistsException.class, () -> cardService.createCard(cardDTO));
     }
 
     @Test
     void getBalance_shouldReturnBalanceWhenCardExists() {
-        String cardNumber = "6549873025634501";
-        BigDecimal expectedBalance = BigDecimal.valueOf(495.15);
-        Card card = new Card(cardNumber, "1234", expectedBalance);
+        Card card = createCard(cardNumber, cardPassword, BigDecimal.valueOf(495.15));
         when(cardRepository.findById(cardNumber)).thenReturn(Optional.of(card));
 
         BigDecimal actualBalance = cardService.getBalance(cardNumber);
 
-        assertEquals(expectedBalance, actualBalance);
+        assertEquals(card.getBalance(), actualBalance);
         verify(cardRepository, times(1)).findById(cardNumber);
     }
 
     @Test
     void getBalance_shouldThrowExceptionWhenCardDoesNotExist() {
-        String cardNumber = "6549873025634501";
         when(cardRepository.findById(cardNumber)).thenReturn(Optional.empty());
 
         assertThrows(CardNotFoundException.class, () -> cardService.getBalance(cardNumber));
