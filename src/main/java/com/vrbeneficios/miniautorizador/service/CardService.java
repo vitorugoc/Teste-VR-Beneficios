@@ -6,6 +6,8 @@ import com.vrbeneficios.miniautorizador.model.Card;
 import com.vrbeneficios.miniautorizador.repository.CardRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class CardService {
 
@@ -21,5 +23,11 @@ public class CardService {
 
         Card newCard = new Card(cardDTO.getCardNumber(), cardDTO.getPassword());
         return cardRepository.save(newCard);
+    }
+
+    public BigDecimal getBalance(String cardNumber) {
+        return cardRepository.findById(cardNumber)
+                .map(Card::getBalance)
+                .orElseThrow(() -> new CardNotFoundException("Card not found: " + cardNumber));
     }
 }
