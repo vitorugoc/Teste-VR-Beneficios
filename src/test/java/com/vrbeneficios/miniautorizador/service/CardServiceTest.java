@@ -52,4 +52,26 @@ class CardServiceTest {
 
         assertThrows(CardAlreadyExistsException.class, () -> cardService.createCard(cardDTO));
     }
+
+    @Test
+    void getBalance_shouldReturnBalanceWhenCardExists() {
+        String cardNumber = "6549873025634501";
+        BigDecimal expectedBalance = BigDecimal.valueOf(495.15);
+        Card card = new Card(cardNumber, "1234", expectedBalance);
+        when(cardRepository.findById(cardNumber)).thenReturn(Optional.of(card));
+
+        BigDecimal actualBalance = cardService.getBalance(cardNumber);
+
+        assertEquals(expectedBalance, actualBalance);
+        verify(cardRepository, times(1)).findById(cardNumber);
+    }
+
+    @Test
+    void getBalance_shouldThrowExceptionWhenCardDoesNotExist() {
+        String cardNumber = "6549873025634501";
+        when(cardRepository.findById(cardNumber)).thenReturn(Optional.empty());
+
+        assertThrows(CardNotFoundException.class, () -> cardService.getBalance(cardNumber));
+        verify(cardRepository, times(1)).findById(cardNumber);
+    }
 }
