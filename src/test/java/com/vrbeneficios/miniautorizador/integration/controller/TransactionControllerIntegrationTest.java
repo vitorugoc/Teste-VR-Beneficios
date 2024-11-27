@@ -1,6 +1,9 @@
 package com.vrbeneficios.miniautorizador.integration.controller;
 
 import com.vrbeneficios.miniautorizador.dto.TransactionDTO;
+import com.vrbeneficios.miniautorizador.model.Card;
+import com.vrbeneficios.miniautorizador.repository.CardRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +24,14 @@ class TransactionControllerIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+    @Autowired
+    private CardRepository cardRepository;
+
+    @BeforeEach
+    void setup() {
+        Card card = new Card("6549873025634501", "1234", BigDecimal.valueOf(100.00));
+        cardRepository.save(card);
+    }
 
     @Test
     void shouldReturnCreatedWhenTransactionIsAuthorized() {
