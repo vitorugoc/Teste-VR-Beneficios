@@ -19,16 +19,15 @@ public class CardService {
     }
 
     public Card createCard(CardDTO cardDTO) {
-        cardRepository.findById(cardDTO.getCardNumber())
-                .ifPresent(card -> { throw new CardAlreadyExistsException("Card already exists"); });
+        cardRepository.findById(cardDTO.getCardNumber()).ifPresent(card -> {
+            throw new CardAlreadyExistsException("Card already exists");
+        });
 
         Card newCard = new Card(cardDTO.getCardNumber(), cardDTO.getPassword());
         return cardRepository.save(newCard);
     }
 
     public BigDecimal getBalance(String cardNumber) {
-        return cardRepository.findById(cardNumber)
-                .map(Card::getBalance)
-                .orElseThrow(() -> new CardNotFoundException("Card not found: " + cardNumber));
+        return cardRepository.findById(cardNumber).map(Card::getBalance).orElseThrow(() -> new CardNotFoundException("Card not found: " + cardNumber));
     }
 }
