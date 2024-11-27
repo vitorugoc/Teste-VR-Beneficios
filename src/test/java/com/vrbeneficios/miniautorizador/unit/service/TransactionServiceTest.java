@@ -1,9 +1,10 @@
-package com.vrbeneficios.miniautorizador.service;
+package com.vrbeneficios.miniautorizador.unit.service;
 
 import com.vrbeneficios.miniautorizador.dto.TransactionDTO;
 import com.vrbeneficios.miniautorizador.exception.TransactionException;
 import com.vrbeneficios.miniautorizador.model.Card;
 import com.vrbeneficios.miniautorizador.repository.CardRepository;
+import com.vrbeneficios.miniautorizador.service.TransactionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

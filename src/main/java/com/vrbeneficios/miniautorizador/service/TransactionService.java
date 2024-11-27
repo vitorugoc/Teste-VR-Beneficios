@@ -6,6 +6,7 @@ import com.vrbeneficios.miniautorizador.model.Card;
 import com.vrbeneficios.miniautorizador.repository.CardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -15,6 +16,7 @@ public class TransactionService {
 
     private final CardRepository cardRepository;
 
+    @Transactional
     public void processTransaction(TransactionDTO transactionDTO) {
         Card card = cardRepository.findByCardNumberWithLock(transactionDTO.getCardNumber())
                 .orElseThrow(() -> new TransactionException("CARTAO_INEXISTENTE"));
