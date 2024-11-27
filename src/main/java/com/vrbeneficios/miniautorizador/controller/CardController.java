@@ -4,6 +4,7 @@ import com.vrbeneficios.miniautorizador.dto.CardDTO;
 import com.vrbeneficios.miniautorizador.exception.CardAlreadyExistsException;
 import com.vrbeneficios.miniautorizador.model.Card;
 import com.vrbeneficios.miniautorizador.service.CardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,10 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/cards")
+@RequiredArgsConstructor
 public class CardController {
 
     private final CardService cardService;
-
-    public CardController(CardService cardService) {
-        this.cardService = cardService;
-    }
 
     @PostMapping
     public ResponseEntity<CardDTO> createCard(@RequestBody CardDTO cardDTO) {
