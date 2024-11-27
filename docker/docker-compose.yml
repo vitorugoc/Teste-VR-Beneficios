@@ -1,7 +1,6 @@
 version: "3.7"
 
 services:
-
   mongo:
     image: mongo:4.2
     hostname: mongo
@@ -26,3 +25,19 @@ services:
       MYSQL_DATABASE: miniautorizador
       MYSQL_ROOT_PASSWORD:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: miniautorizador-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongo
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/miniautorizador
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ""
+      SPRING_DATA_MONGODB_URI: mongodb://user:password@mongo:27017/miniautorizador
