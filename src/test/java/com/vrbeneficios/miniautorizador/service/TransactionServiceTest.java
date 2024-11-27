@@ -47,13 +47,13 @@ class TransactionServiceTest {
         Card card = createCard(initialBalance);
         TransactionDTO transaction = createTransactionDTO(cardNumber, password, transactionAmount);
 
-        when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.of(card));
+        when(cardRepository.findByCardNumberWithLock(cardNumber)).thenReturn(Optional.of(card));
 
         transactionService.processTransaction(transaction);
 
         card.setBalance(card.getBalance().subtract(transactionAmount));
         verify(cardRepository, times(1)).save(card);
-        verify(cardRepository, times(1)).findByCardNumber(cardNumber);
+        verify(cardRepository, times(1)).findByCardNumberWithLock(cardNumber);
     }
 
     @Test
@@ -62,7 +62,7 @@ class TransactionServiceTest {
         BigDecimal transactionAmount = BigDecimal.valueOf(10.00);
         TransactionDTO transaction = createTransactionDTO(cardNumber, password, transactionAmount);
 
-        when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.empty());
+        when(cardRepository.findByCardNumberWithLock(cardNumber)).thenReturn(Optional.empty());
 
         assertThrows(TransactionException.class, () -> transactionService.processTransaction(transaction));
     }
@@ -74,7 +74,7 @@ class TransactionServiceTest {
         Card card = createCard(initialBalance);
         TransactionDTO transaction = createTransactionDTO(cardNumber, wrongPassword, transactionAmount);
 
-        when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.of(card));
+        when(cardRepository.findByCardNumberWithLock(cardNumber)).thenReturn(Optional.of(card));
 
         assertThrows(TransactionException.class, () -> transactionService.processTransaction(transaction));
     }
@@ -85,7 +85,7 @@ class TransactionServiceTest {
         Card card = createCard(initialBalance);
         TransactionDTO transaction = createTransactionDTO(cardNumber, password, transactionAmount);
 
-        when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.of(card));
+        when(cardRepository.findByCardNumberWithLock(cardNumber)).thenReturn(Optional.of(card));
 
         assertThrows(TransactionException.class, () -> transactionService.processTransaction(transaction));
     }

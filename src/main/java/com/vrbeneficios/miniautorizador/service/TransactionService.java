@@ -16,7 +16,7 @@ public class TransactionService {
     private final CardRepository cardRepository;
 
     public void processTransaction(TransactionDTO transactionDTO) {
-        Card card = cardRepository.findByCardNumber(transactionDTO.getCardNumber())
+        Card card = cardRepository.findByCardNumberWithLock(transactionDTO.getCardNumber())
                 .orElseThrow(() -> new TransactionException("CARTAO_INEXISTENTE"));
 
         validatePassword(card, transactionDTO.getCardPassword());
