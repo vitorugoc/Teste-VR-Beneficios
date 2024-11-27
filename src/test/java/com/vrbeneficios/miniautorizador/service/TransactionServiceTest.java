@@ -1,5 +1,6 @@
 package com.vrbeneficios.miniautorizador.service;
 
+import com.vrbeneficios.miniautorizador.dto.TransactionDTO;
 import com.vrbeneficios.miniautorizador.exception.TransactionException;
 import com.vrbeneficios.miniautorizador.model.Card;
 import com.vrbeneficios.miniautorizador.repository.CardRepository;
@@ -34,10 +35,11 @@ class TransactionServiceTest {
         String password = "1234";
         BigDecimal transactionAmount = BigDecimal.valueOf(10.00);
         Card card = new Card(cardNumber, password, BigDecimal.valueOf(500.00));
+        TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
 
         when(cardRepository.findById(cardNumber)).thenReturn(Optional.of(card));
 
-        transactionService.processTransaction(cardNumber, password, transactionAmount);
+        transactionService.processTransaction(transaction);
 
         verify(cardRepository, times(1)).save(card);
         verify(cardRepository, times(1)).findById(cardNumber);
@@ -48,11 +50,12 @@ class TransactionServiceTest {
         String cardNumber = "0000000000000000";
         String password = "1234";
         BigDecimal transactionAmount = BigDecimal.valueOf(10.00);
+        TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
 
         when(cardRepository.findById(cardNumber)).thenReturn(Optional.empty());
 
         assertThrows(TransactionException.class, () ->
-                transactionService.processTransaction(cardNumber, password, transactionAmount)
+                transactionService.processTransaction(transaction)
         );
     }
 
@@ -62,11 +65,12 @@ class TransactionServiceTest {
         String password = "wrong";
         BigDecimal transactionAmount = BigDecimal.valueOf(10.00);
         Card card = new Card(cardNumber, "1234", BigDecimal.valueOf(500.00));
+        TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
 
         when(cardRepository.findById(cardNumber)).thenReturn(Optional.of(card));
 
         assertThrows(TransactionException.class, () ->
-                transactionService.processTransaction(cardNumber, password, transactionAmount)
+                transactionService.processTransaction(transaction)
         );
     }
 
@@ -76,11 +80,12 @@ class TransactionServiceTest {
         String password = "1234";
         BigDecimal transactionAmount = BigDecimal.valueOf(600.00);
         Card card = new Card(cardNumber, password, BigDecimal.valueOf(500.00));
+        TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
 
         when(cardRepository.findById(cardNumber)).thenReturn(Optional.of(card));
 
         assertThrows(TransactionException.class, () ->
-                transactionService.processTransaction(cardNumber, password, transactionAmount)
+                transactionService.processTransaction(transaction)
         );
     }
 }

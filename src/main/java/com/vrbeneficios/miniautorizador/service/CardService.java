@@ -5,18 +5,16 @@ import com.vrbeneficios.miniautorizador.exception.CardAlreadyExistsException;
 import com.vrbeneficios.miniautorizador.exception.CardNotFoundException;
 import com.vrbeneficios.miniautorizador.model.Card;
 import com.vrbeneficios.miniautorizador.repository.CardRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
 @Service
+@RequiredArgsConstructor
 public class CardService {
 
     private final CardRepository cardRepository;
-
-    public CardService(CardRepository cardRepository) {
-        this.cardRepository = cardRepository;
-    }
 
     public Card createCard(CardDTO cardDTO) {
         cardRepository.findById(cardDTO.getCardNumber())
