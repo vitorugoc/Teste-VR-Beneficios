@@ -40,7 +40,7 @@ class CardControllerIntegrationTest {
         CardDTO cardDTO = new CardDTO("1111222233334444", "5678");
 
         ResponseEntity<CardDTO> response = restTemplate.postForEntity(
-                "http://localhost:" + port + "/cards",
+                "http://localhost:" + port + "/cartoes",
                 cardDTO,
                 CardDTO.class
         );
@@ -55,7 +55,7 @@ class CardControllerIntegrationTest {
         CardDTO cardDTO = new CardDTO("6549873025634501", "1234");
 
         ResponseEntity<CardDTO> response = restTemplate.postForEntity(
-                "http://localhost:" + port + "/cards",
+                "http://localhost:" + port + "/cartoes",
                 cardDTO,
                 CardDTO.class
         );
@@ -69,7 +69,7 @@ class CardControllerIntegrationTest {
         String cardNumber = "6549873025634501";
 
         ResponseEntity<BigDecimal> response = restTemplate.getForEntity(
-                "http://localhost:" + port + "/cards/" + cardNumber,
+                "http://localhost:" + port + "/cartoes/" + cardNumber,
                 BigDecimal.class
         );
 
@@ -82,7 +82,7 @@ class CardControllerIntegrationTest {
         String cardNumber = "0000111122223333";
 
         ResponseEntity<String> response = restTemplate.getForEntity(
-                "http://localhost:" + port + "/cards/" + cardNumber,
+                "http://localhost:" + port + "/cartoes/" + cardNumber,
                 String.class
         );
 

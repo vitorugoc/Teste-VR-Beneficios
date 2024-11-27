@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/cards")
+@RequestMapping("/cartoes")
 @RequiredArgsConstructor
 public class CardController {
 
