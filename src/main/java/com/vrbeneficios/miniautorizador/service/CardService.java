@@ -2,6 +2,7 @@ package com.vrbeneficios.miniautorizador.service;
 
 import com.vrbeneficios.miniautorizador.dto.CardDTO;
 import com.vrbeneficios.miniautorizador.exception.CardAlreadyExistsException;
+import com.vrbeneficios.miniautorizador.exception.CardNotFoundException;
 import com.vrbeneficios.miniautorizador.model.Card;
 import com.vrbeneficios.miniautorizador.repository.CardRepository;
 import org.springframework.stereotype.Service;
