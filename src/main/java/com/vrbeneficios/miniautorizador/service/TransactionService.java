@@ -1,6 +1,7 @@
 package com.vrbeneficios.miniautorizador.service;
 
 import com.vrbeneficios.miniautorizador.dto.TransactionDTO;
+import com.vrbeneficios.miniautorizador.exception.TransactionException;
 import com.vrbeneficios.miniautorizador.model.Card;
 import com.vrbeneficios.miniautorizador.repository.CardRepository;
 import lombok.RequiredArgsConstructor;
