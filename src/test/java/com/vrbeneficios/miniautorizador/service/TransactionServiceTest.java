@@ -13,7 +13,7 @@ import org.mockito.MockitoAnnotations;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class TransactionServiceTest {
@@ -24,23 +24,34 @@ class TransactionServiceTest {
     @InjectMocks
     private TransactionService transactionService;
 
+    private final String cardNumber = "6549873025634501";
+    private final String password = "1234";
+    private final BigDecimal initialBalance = BigDecimal.valueOf(500.00);
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    private TransactionDTO createTransactionDTO(String cardNumber, String password, BigDecimal amount) {
+        return new TransactionDTO(cardNumber, password, amount);
+    }
+
+    private Card createCard(BigDecimal balance) {
+        return new Card("6549873025634501", "1234", balance);
+    }
+
     @Test
     void shouldAuthorizeTransactionWhenBalanceIsSufficientAndPasswordIsCorrect() {
-        String cardNumber = "6549873025634501";
-        String password = "1234";
         BigDecimal transactionAmount = BigDecimal.valueOf(10.00);
-        Card card = new Card(cardNumber, password, BigDecimal.valueOf(500.00));
-        TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
+        Card card = createCard(initialBalance);
+        TransactionDTO transaction = createTransactionDTO(cardNumber, password, transactionAmount);
 
         when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.of(card));
 
         transactionService.processTransaction(transaction);
 
+        card.setBalance(card.getBalance().subtract(transactionAmount));
         verify(cardRepository, times(1)).save(card);
         verify(cardRepository, times(1)).findByCardNumber(cardNumber);
     }
@@ -48,44 +59,34 @@ class TransactionServiceTest {
     @Test
     void shouldThrowExceptionWhenCardDoesNotExist() {
         String cardNumber = "0000000000000000";
-        String password = "1234";
         BigDecimal transactionAmount = BigDecimal.valueOf(10.00);
-        TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
+        TransactionDTO transaction = createTransactionDTO(cardNumber, password, transactionAmount);
 
         when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.empty());
 
-        assertThrows(TransactionException.class, () ->
-                transactionService.processTransaction(transaction)
-        );
+        assertThrows(TransactionException.class, () -> transactionService.processTransaction(transaction));
     }
 
     @Test
     void shouldThrowExceptionWhenPasswordIsIncorrect() {
-        String cardNumber = "6549873025634501";
-        String password = "wrong";
+        String wrongPassword = "wrong";
         BigDecimal transactionAmount = BigDecimal.valueOf(10.00);
-        Card card = new Card(cardNumber, "1234", BigDecimal.valueOf(500.00));
-        TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
+        Card card = createCard(initialBalance);
+        TransactionDTO transaction = createTransactionDTO(cardNumber, wrongPassword, transactionAmount);
 
         when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.of(card));
 
-        assertThrows(TransactionException.class, () ->
-                transactionService.processTransaction(transaction)
-        );
+        assertThrows(TransactionException.class, () -> transactionService.processTransaction(transaction));
     }
 
     @Test
     void shouldThrowExceptionWhenBalanceIsInsufficient() {
-        String cardNumber = "6549873025634501";
-        String password = "1234";
         BigDecimal transactionAmount = BigDecimal.valueOf(600.00);
-        Card card = new Card(cardNumber, password, BigDecimal.valueOf(500.00));
-        TransactionDTO transaction = new TransactionDTO(cardNumber, password, transactionAmount);
+        Card card = createCard(initialBalance);
+        TransactionDTO transaction = createTransactionDTO(cardNumber, password, transactionAmount);
 
         when(cardRepository.findByCardNumber(cardNumber)).thenReturn(Optional.of(card));
 
-        assertThrows(TransactionException.class, () ->
-                transactionService.processTransaction(transaction)
-        );
+        assertThrows(TransactionException.class, () -> transactionService.processTransaction(transaction));
     }
 }
