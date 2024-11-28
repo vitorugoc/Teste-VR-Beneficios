@@ -2,6 +2,7 @@ package com.vrbeneficios.miniautorizador.controller;
 
 import com.vrbeneficios.miniautorizador.dto.TransactionDTO;
 import com.vrbeneficios.miniautorizador.service.TransactionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class TransactionController {
     private final TransactionService transactionService;
 
     @PostMapping
-    public ResponseEntity<?> processTransaction(@RequestBody TransactionDTO transactionDTO) {
+    public ResponseEntity<?> processTransaction(@Valid @RequestBody TransactionDTO transactionDTO) {
         try {
             transactionService.processTransaction(transactionDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body("OK");

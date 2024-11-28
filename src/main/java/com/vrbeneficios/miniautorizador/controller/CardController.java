@@ -4,6 +4,7 @@ import com.vrbeneficios.miniautorizador.dto.CardDTO;
 import com.vrbeneficios.miniautorizador.exception.CardAlreadyExistsException;
 import com.vrbeneficios.miniautorizador.model.Card;
 import com.vrbeneficios.miniautorizador.service.CardService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class CardController {
     private final CardService cardService;
 
     @PostMapping
-    public ResponseEntity<CardDTO> createCard(@RequestBody CardDTO cardDTO) {
+    public ResponseEntity<CardDTO> createCard(@Valid @RequestBody CardDTO cardDTO) {
         try {
             Card newCard = cardService.createCard(cardDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(new CardDTO(newCard.getCardNumber(), newCard.getPassword()));
